@@ -29,11 +29,13 @@ Como este é um repositório de estudos contínuos, a estrutura de pastas é div
 
 ---
 
-## 🌱 Minha Evolução
+## 🌱 A Minha Evolução
 
-*(Dica: Use este espaço para contar rapidamente como você começou e o que está estudando agora)*
+> "Comecei do básico, mas trabalho todos os dias para superar a minha versão de ontem."
 
-Comecei minha jornada focando na base da web: **HTML e CSS**. Conforme fui ganhando confiança na construção de layouts, comecei a me aventurar no **JavaScript** para dar vida e interatividade às páginas. Meu foco atual é dominar os fundamentos do Front-end para construir aplicações cada vez mais robustas.
+A minha jornada na programação começou com o foco em dominar a base da web: HTML e CSS. Conforme fui ganhando confiança na construção de interfaces, comecei a aventurar-me no JavaScript para dar vida e interatividade aos projetos. 
+
+Este repositório é a prova viva dessa evolução diária. O meu objetivo atual é consolidar os fundamentos e, passo a passo, tornar-me num programador capaz de criar soluções de excelência e com verdadeiro impacto.
 
 ---
 
