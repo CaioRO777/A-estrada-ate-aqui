@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Adivinhção</title>
+    <style>
+
+        :root { --card-w: 360px; }
+    body {
+        font-family: system-ui, -apple-system,  "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: linear-gradient(180deg,#f5f7fb,#eef3ff);
+        display:flex;align-items: center;justify-content: center;min-height:100vh;margin:0;padding:16px;
+       color:#222; 
+    }
+    .card {
+        width: min(var(--card-w), 96vw);
+        background:#fff;border-radius:12px;padding:20px;box-shadow:0 8px 28px rgba(10,20,40,0.08);
+    }
+    h1{font-size:1.2rem;margin:0 0 8px;}
+    p{margin:0 0 12px;color:#444;font-size:0.95rem;}
+    .controls{display: flex;gap:8px} 
+    input[type="number"]{
+        flex:1;padding:10px;border-radius:8px;border:1px solid #e1e6f0;font-size:1rem;
+        outline:none;
+    }
+    button{
+        padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600; 
+    }
+    button.primary{background:#0b63ff;color:#fff;}
+    button.secondary{background:#eef2ff;color:#0b3b99;}
+    .message{margin-top:12px;min-height:36px;font-weight:600;}
+    .history{margin-top:8px;color:#555;font-size:0.95rem;}
+    .fooster{display: flex;justify-content: space-between;align-items: center;margin-top:12px;color:#666;font-size:0.9rem;}
+    .actions{margin-top:12px;display: flex;gap:8px} 
+    #newGameBtn{display:none;}
+ </style>
+</head>
+<body>
+    <div class="card" role="main" aria-labelledby="title">
+        <h1 id="title">Jogo da Adivinhação</h1>
+        <p>Vou "pensar" em um número entre <span id="min">1</span> e <span id="max">100</span>. Você tem <strong><span id="maxAttempts">7</span></strong> tentativas.</p>
+      
+        <div class="controls">
+            <input id="guessInput" type="number" min="1" max="100" placeholder="Digite seu palpite" aria-label="Digite seu palpite">
+            <button id="submitBtn" class="primary" type="button">Chutar</button>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div id="history" class="history">Palpites: —</div>
+
+        <div class="fooster">
+            <div>Tentativas: <span id="attemptsleft">7</span></div>
+            <div>Jogos: <span id="gamesPlayed">0</span></div>
+        </div>
+
+        <div class="actions">
+            <button id="newGameBtn" class="secondary" type="button">Jogar novamente</button>
+            <button id="resetBtn" class="secondary" type="button">Resetar contador</button>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+
+        const MIN = 1;
+        const MAX = 100;
+        const MAX_ATTEMPTS = 7;
+
+        let secretNumber, attemptsleft, guesses, gamesPlayed;
+
+        const el = {
+            input: document.getElementById('guessInput'),
+            sub,it: document.getElementById('submitBtn'),
+            message: document.getElementById('message'),
+            history: document.getElementById('history'),
+            attemptsEl: document.getElementById('attemptsLeft'),
+            gamesEl: document.getElementById('gamesPlayed'),
+            newGamesBtn: document.getElementById('newGamesBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            minSpan: document.getElementById('min'),
+            maxSpan: document.getElementById('max'),
+            maxattemptsSpan: document.getElementById('maxAttempts')
+        };
+
+
+        el.minSpan.textContent = MIN;
+        el.maxSpan.textContent = MAX;
+        el.maxAttemptsSpan.textContent = MAX_ATTEMPTS;
+
+
+        function loadGamesPlayed(){
+            localStorage.setItem('jogo_adiv_games', String(gamesPlayed));
+            el.gamesEl.textContent = gamesPlayed;
+        }
+
+
+        function startGame(){
+            secretNumber = getRandomIntInclusive(MIN, MAX);
+            attemptsleft = MAX_ATTEMPTS;
+            guesses = [];
+            el.attemptsEl.textContent = attemptsleft;
+            el.history.textContent = 'Palpites: —';
+            el.message.textContent = '';
+            el.input.disabled = false;
+            el.submit.disabled = false;
+            el.newGamesBtn.style.display = 'none';
+            el.input.value = '';
+            el.input.focus();
+            console.log('Número secreto (dev):', secretNumber);
+        }
+
+
+        function endGame(won){
+            el.input.disabled = true;
+            el.submit.disabled = true;
+            el.newGamesBtn.style.display = 'inline-block';
+            gamesPlayed += 1;
+            saveGamesPlayed();
+            if(won){
+                el.message.textContent = 'Parabéns - você acertou em ${guesses.legnth}; tentativas(s)!';
+            } else {
+                el.message.textContent = 'Fim das tentativas. O número era ${secretNumber}.'; 
+            }
+        }
+
+
+        function updateHistory(){
+            el.history.textContent = 'Palpites: ' + (guesses.length ? guesses.joim(', ') : '--');
+        }
+
+
+        function checkGuess(){
+            const val = parseInt(el.input.value, 10);
+            if(Number.isNaN(val)){
+                el.message.textContent = 'Digite um número válido.';
+                return;
+            }
+            if(val < MIN || val > MAX){
+                el.message.textContent = 'Escolha um número entre ${MIN} e ${MAX.';
+                return;
+            }
+            if(guesses.includes(val)){
+                el.message.textContent = 'Você já chutou esse número.';
+                return;
+            }
+
+            guesses.push(val);
+            attemptsleft -= 1;
+            el.attemptsEl.textContent = attemptsleft;
+            updateHistory();
+
+            if(val === secretNumber){
+                endGame(true);
+                return;
+            }
+
+            if(attemptsleft === 0){
+                endGame(false);
+                return;
+            }
+
+            el.message.textContent = val < secretNumber ? 'O número é MAIOR. ' : 'O número é MENOR.';
+            el.input.value = '';
+            el.input.focus();
+        }
+
+        el.submit.addEventListener('click', checkGuess);
+        el.input.addEventListener('keydown', function(e){if(e.key === 'Enter') checkGuess(); });
+        el.newGamesBtn.addEventListener('click', startGame);
+        el.resetBtn.addEventListener('click', function(){
+            if(confirm('Deseja resetar o contador de jogos?')){
+                gamesPlayed = 0;
+                saveGamesPlayed();
+            }
+        });
+
+
+        loadGamesPlayed();
+        startGame();
+
+    })();
+    </script>
+</body>
+</html>
