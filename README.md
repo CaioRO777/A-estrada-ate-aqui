@@ -20,7 +20,7 @@ Criei este espaço para:
 
 ## 🚀 O que você vai encontrar por aqui?
 
-Como este é um repositório de estudos contínuos, a estrutura de pastas é dividida por temas/tecnologias. Aqui tem de tudo um pouco:
+Como este é um repositório de estudos contínuos, a estrutura de pastas é dividida (ou quase) por temas/tecnologias. Aqui tem de tudo um pouco:
 
 * 🧩 **Exercícios práticos:** Resoluções de desafios de lógica e pequenos testes de algoritmos.
 * 🎨 **Testes de Interface (UI):** Componentes isolados de HTML/CSS (botões, menus, animações).
